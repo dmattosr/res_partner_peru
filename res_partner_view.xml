@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+
+		<!-- Partner Form View  -->
+		<record model="ir.ui.view" id="view_partner_form_equant">
+			<field name="name">res.partner.form</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">
+				<!-- odoo8 is_company -->
+				<!-- odoo9 company_type -->
+				<xpath expr="//sheet" position="before">
+
+					<button string="Actualizar Dni"
+							name="button_update_document"
+							help="Actualiza los datos del dni"
+							type="object"
+							attrs="{'invisible': [('is_company','=', True)]}"
+					/>
+
+					<button string="Actualizar Ruc"
+							name="button_update_document"
+							help="Actualiza los datos ficha ruc de sunat"
+							type="object"
+							attrs="{'invisible': [('is_company','=', False)]}"
+					/>
+					
+					<!-- odoo9 company_type -->
+					<!--button string="Actualizar Dni"
+							name="button_update_document"
+							help="Actualiza los datos del dni"
+							type="object"
+							attrs="{'invisible': [('company_type','=', 'company')]}"
+					/>
+
+					<button string="Actualizar Ruc"
+							name="button_update_document"
+							help="Actualiza los datos ficha ruc de sunat"
+							type="object"
+							attrs="{'invisible': [('company_type','=', 'person')]}"
+					/-->
+
+				</xpath>
+
+				<xpath expr="//field[@name='street']" position="before">
+					<field name="doc_type"/>
+					<field name="doc_number" placeholder="#Dni/#Ruc/#Pasaporte"/>
+				</xpath>
+
+				<!-- odoo 9-->
+				<!--xpath expr="//field[@name='type']" position="before">
+					<field name="doc_type"/>
+					<field name="doc_number" placeholder="#Dni/#Ruc/#Pasaporte"/>
+				</xpath-->
+
+				<!--xpath expr="//field[@name='function']" position="after">
+					<field name="workplace"  attrs="{'invisible': [('company_type','=', 'company')]}"/>
+				</xpath-->
+
+
+				<xpath expr="//page[@name='sales_purchases']" position="after">
+						<!--page name="sunat_info" string="Sunat" attrs="{'invisible': [('company_type','=', 'person')]}"--> <!-- odoo 9-->
+						<page name="sunat_info" string="Sunat" attrs="{'invisible': [('is_company','=', False)]}">
+							<group name="container_row_2">
+								<group string="Contribuyente" name="sale">
+									<field name="tipo_contribuyente"/>
+									<field name="nombre_comercial"/>
+									<field name="fecha_inscripcion"/>
+									<field name="estado_contribuyente"/>
+									<field name="condicion_contribuyente"/>
+									<field name="ultima_actualizacion_sunat"/>
+								</group>
+								<group string="Agente de Retensión">
+									<field name="agente_retension"/>
+									<field name="agente_retension_apartir_del"/>
+									<field name="agente_retension_resolucion"/>
+								</group>
+								<group string="Contabilidad">
+									<field name="sistema_emision_comprobante"/>
+									<field name="sistema_contabilidad"/>
+								</group>
+							</group>
+							<group string="Representantes"/>
+							<field name="representante_legal_ids">
+								 <tree string="Contact Tags">
+									<field name="documento"/>
+									<field name="nro_documento"/>
+									<field name="nombre"/>
+									<field name="cargo"/>
+									<field name="fecha_desde"/>
+								</tree>
+							</field>
+						</page>
+				</xpath>
+			</field>
+		</record>
+
+
+	</data>
+</openerp>
