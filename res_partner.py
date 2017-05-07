@@ -56,9 +56,9 @@ class res_partner(models.Model):
     condicion_contribuyente = fields.Char(
         'Condición del contribuyente', readonly=True)
 
-    agente_retension = fields.Boolean('Agente de Retención', readonly=True)
-    agente_retension_apartir_del = fields.Date('A partir del', readonly=True)
-    agente_retension_resolucion = fields.Char('Resolución', readonly=True)
+    agente_retencion = fields.Boolean('Agente de Retención', readonly=True, oldname='agente_retension')
+    agente_retencion_apartir_del = fields.Date('A partir del', readonly=True,  oldname='agente_retension_apartir_del')
+    agente_retencion_resolucion = fields.Char('Resolución', readonly=True,  oldname='agente_retension_resolucion')
 
     sistema_emision_comprobante = fields.Char('Sistema emisión', readonly=True)
     sistema_contabilidad = fields.Char('Sistema contabilidad', readonly=True)
@@ -134,11 +134,11 @@ class res_partner(models.Model):
                     self.condicion_contribuyente = d[
                         'condicion_contribuyente']
 
-                    self.agente_retension = d['agente_retension']
-                    self.agente_retension_apartir_del = d[
-                        'agente_retension_apartir_del']
-                    self.agente_retension_resolucion = d[
-                        'agente_retension_resolucion']
+                    self.agente_retencion = d['agente_retencion']
+                    self.agente_retencion_apartir_del = d[
+                        'agente_retencion_apartir_del']
+                    self.agente_retencion_resolucion = d[
+                        'agente_retencion_resolucion']
                     self.ultima_actualizacion_sunat = d[
                         'ultima_actualizacion']
                     self.sistema_emision_comprobante = d[
