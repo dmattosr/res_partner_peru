@@ -12,7 +12,7 @@ def get_data_doc_number(tipo_doc, numero_doc, format='json'):
     res = {'error': True, 'message': None, 'data': {}}
     try:
         response = requests.get(url, auth=(user, password))
-    except requests.exceptions.ConnectionError, e:
+    except requests.exceptions.ConnectionError:
         res['message'] = 'Error en la conexion'
         return res
 
@@ -22,16 +22,14 @@ def get_data_doc_number(tipo_doc, numero_doc, format='json'):
     else:
         try:
             res['message'] = response.json()['detail']
-        except Exception, e:
+        except Exception:
             res['error'] = True
     return res
 
 
-class res_partner(models.Model):
+class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    # company_type = fields.Selection((('person', 'Persona'), ('company',
-    # 'Empresa'))) # habilitar odoo9
     workplace = fields.Char('Centro de Trabajo')
     doc_type = fields.Selection(
         string='Tipo de Documento',
@@ -56,9 +54,9 @@ class res_partner(models.Model):
     condicion_contribuyente = fields.Char(
         'Condición del contribuyente', readonly=True)
 
-    agente_retencion = fields.Boolean('Agente de Retención', readonly=True, oldname='agente_retension')
-    agente_retencion_apartir_del = fields.Date('A partir del', readonly=True,  oldname='agente_retension_apartir_del')
-    agente_retencion_resolucion = fields.Char('Resolución', readonly=True,  oldname='agente_retension_resolucion')
+    agente_retencion = fields.Boolean('Agente de Retención', readonly=True)
+    agente_retencion_apartir_del = fields.Date('A partir del', readonly=True)
+    agente_retencion_resolucion = fields.Char('Resolución', readonly=True)
 
     sistema_emision_comprobante = fields.Char('Sistema emisión', readonly=True)
     sistema_contabilidad = fields.Char('Sistema contabilidad', readonly=True)
@@ -68,27 +66,15 @@ class res_partner(models.Model):
     representante_legal_ids = fields.One2many(
         'res.partner.representante_legal', inverse_name='parent_id', readonly=True)
 
-
     @api.multi
     def onchange_type(self, is_company):
-        res = super(res_partner, self).onchange_type(is_company)
+        res = super(ResPartner, self).onchange_type(is_company)
 
         if 'value' in res.keys():
             doc_type = is_company and 'ruc' or 'dni'
             res['value'].update({'doc_type': doc_type})
 
         return res
-
-    # odoo 9
-    # @api.multi
-    # def on_change_company_type(self, company_type):
-    #     res = super(res_partner, self).on_change_company_type(company_type)
-
-    #     if 'value' in res.keys():
-    #         doc_type = company_type == 'company' and 'ruc' or 'dni'
-    #         res['value'].update({'doc_type': doc_type})
-
-    #     return res
 
     @api.onchange('doc_number')
     def onchange_doc_number(self):
@@ -99,7 +85,6 @@ class res_partner(models.Model):
         if self.country_id.name == u'Perú':
             if self.doc_type and self.doc_type == 'dni' and \
                not self.is_company:
-               # self.company_type == 'person': odoo9
                 if self.doc_number and len(self.doc_number) != 8:
                     raise Warning('El Dni debe tener 8 caracteres')
                 else:
